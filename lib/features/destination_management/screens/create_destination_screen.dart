@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../services/destination_service.dart';
 
@@ -20,6 +22,7 @@ class _CreateDestinationScreenState extends State<CreateDestinationScreen> {
 
   String type = "BERTH";
   bool loading = false;
+  LatLng? selectedLocation;
 
   @override
   void dispose() {
@@ -80,6 +83,25 @@ class _CreateDestinationScreenState extends State<CreateDestinationScreen> {
     });
   }
 
+  void selectLocation(LatLng point) {
+    setState(() {
+      selectedLocation = point;
+      latitudeController.text = point.latitude.toStringAsFixed(6);
+      longitudeController.text = point.longitude.toStringAsFixed(6);
+    });
+  }
+
+  void updateSelectedLocationFromFields() {
+    final latitude = double.tryParse(latitudeController.text.trim());
+    final longitude = double.tryParse(longitudeController.text.trim());
+
+    setState(() {
+      selectedLocation = latitude == null || longitude == null
+          ? null
+          : LatLng(latitude, longitude);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,6 +134,43 @@ class _CreateDestinationScreenState extends State<CreateDestinationScreen> {
                     },
             ),
             const SizedBox(height: 15),
+            SizedBox(
+              height: 260,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: FlutterMap(
+                  options: MapOptions(
+                    initialCenter:
+                        selectedLocation ?? const LatLng(9.2876, 79.3129),
+                    initialZoom: 13,
+                    onTap: (_, point) => selectLocation(point),
+                  ),
+                  children: [
+                    TileLayer(
+                      urlTemplate:
+                          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      userAgentPackageName: 'com.voc.trucktracking',
+                    ),
+                    if (selectedLocation != null)
+                      MarkerLayer(
+                        markers: [
+                          Marker(
+                            point: selectedLocation!,
+                            width: 48,
+                            height: 48,
+                            child: const Icon(
+                              Icons.location_on,
+                              color: Colors.red,
+                              size: 42,
+                            ),
+                          ),
+                        ],
+                      ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 15),
             TextField(
               controller: latitudeController,
               keyboardType: const TextInputType.numberWithOptions(
@@ -119,6 +178,7 @@ class _CreateDestinationScreenState extends State<CreateDestinationScreen> {
                 signed: true,
               ),
               decoration: const InputDecoration(labelText: "Latitude"),
+              onChanged: (_) => updateSelectedLocationFromFields(),
             ),
             TextField(
               controller: longitudeController,
@@ -127,6 +187,7 @@ class _CreateDestinationScreenState extends State<CreateDestinationScreen> {
                 signed: true,
               ),
               decoration: const InputDecoration(labelText: "Longitude"),
+              onChanged: (_) => updateSelectedLocationFromFields(),
             ),
             TextField(
               controller: radiusController,

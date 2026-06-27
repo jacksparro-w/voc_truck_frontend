@@ -6,11 +6,13 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/network/api_response_parser.dart';
 import '../../../core/storage/secure_storage.dart';
 import '../../alerts/screens/alerts_screen.dart';
+import '../../cargo_management/screens/cargo_types_screen.dart';
 import '../../destination_management/screens/destinations_screen.dart';
 import '../../driver_management/screens/drivers_screen.dart';
 import '../../truck_management/screens/trucks_screen.dart';
 import '../../tracking/screens/live_map_screen.dart';
 import '../../trucks/screens/truck_monitoring_screen.dart';
+import '../../trips/screens/trip_history_screen.dart';
 import '../models/dashboard_summary.dart';
 import '../services/dashboard_service.dart';
 import '../widgets/summary_card.dart';
@@ -290,6 +292,18 @@ class _DashboardScreenState
                         ),
                       ),
                       _ActionTile(
+                        icon: Icons.history,
+                        title:
+                            "Trip History",
+                        subtitle:
+                            "Review completed and past trips",
+                        onTap: () =>
+                            _open(
+                          context,
+                          const TripHistoryScreen(),
+                        ),
+                      ),
+                      _ActionTile(
                         icon: Icons
                             .notifications_active,
                         title: "Alerts",
@@ -336,6 +350,18 @@ class _DashboardScreenState
                             _open(
                           context,
                           const DestinationsScreen(),
+                        ),
+                      ),
+                      _ActionTile(
+                        icon: Icons.inventory_2,
+                        title:
+                            "Cargo Type Management",
+                        subtitle:
+                            "Create cargo types for loaded trips",
+                        onTap: () =>
+                            _open(
+                          context,
+                          const CargoTypesScreen(),
                         ),
                       ),
                     ],

@@ -9,7 +9,6 @@ import '../widgets/trip_info_card.dart';
 import '../../tracking/services/location_service.dart';
 import '../../trips/screens/active_trip_screen.dart';
 import '../../trips/screens/start_trip_screen.dart';
-import '../../trips/screens/trip_history_screen.dart';
 import '../../trips/services/trip_service.dart';
 
 class DriverDashboardScreen extends StatefulWidget {
@@ -256,19 +255,6 @@ class _DriverDashboardScreenState extends State<DriverDashboardScreen> {
                         : null,
                     icon: const Icon(Icons.route),
                     label: const Text("Current Trip"),
-                  ),
-
-                  OutlinedButton.icon(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const TripHistoryScreen(),
-                        ),
-                      );
-                    },
-                    icon: const Icon(Icons.history),
-                    label: const Text("Trip History"),
                   ),
 
                   OutlinedButton.icon(
